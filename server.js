@@ -126,8 +126,8 @@ app.put('/edit', function (요청, 결과) {
             날짜: 요청.body.date,
             내용: 요청.body.detail
         }
-    }, function (에러, 결과) {
-        console.log('수정완료');
-        응답.redirect('/list');
+    }, function () {
+        console.log('수정완료')
+        응답.redirect('/list')
     });
 });
