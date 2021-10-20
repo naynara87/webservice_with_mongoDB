@@ -1,0 +1,8 @@
+
+# Directories #
+node_modules
+dist/*
+*.log
+ 
+# OS Files #
+.DS_Store
