@@ -3,9 +3,7 @@ const app = express()
 const bodyParser = require('body-parser')
 
 
-app.use(bodyParser.urlencoded({
-    extended: true
-}));
+app.use(bodyParser.urlencoded({extended: true}));
 
 const MongoClient = require('mongodb').MongoClient;
 
@@ -127,7 +125,7 @@ app.put('/edit', function (요청, 결과) {
             내용: 요청.body.detail
         }
     }, function () {
-        console.log('수정완료')
-        응답.redirect('/list')
+        console.log('수정완료');
+        응답.redirect('/list');
     });
 });

@@ -14,7 +14,7 @@
     <title>Todolist</title>
 </head>
 
-<body style="padding-top:5rem">
+<body>
     <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
         <a class="navbar-brand" href="#">Todo App</a>
         <button class="navbar-toggler collapsed" type="button" data-toggle="collapse"
@@ -41,8 +41,22 @@
             </form>
         </div>
     </nav>
-
-    <h1>홈입니다.</h1>
+    <div class="signin text-center">
+        <form class="form-signin">
+            <h1 class="h3 mb-3 font-weight-bold">로그인</h1>
+            <label for="inputEmail" class="sr-only">ID</label>
+            <input type="text" id="inputEmail" class="form-control" placeholder="아이디를 입력하세요." required="" autofocus="">
+            <label for="inputPassword" class="sr-only">Password</label>
+            <input type="password" id="inputPassword" class="form-control" placeholder="비밀번호를 입력하세요." required="">
+            <div class="checkbox mb-3">
+            <label>
+                <input type="checkbox" value="remember-me"> Remember me
+            </label>
+            </div>
+            <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+            <p class="mt-5 mb-3 text-muted">© 2021</p>
+        </form>
+    </div>
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
