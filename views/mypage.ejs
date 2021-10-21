@@ -13,10 +13,10 @@
     <title>Todolist</title>
 </head>
 
-<body>
-    <%- include('nav.html') %>
+<body style="padding-top:6rem">
+    <%- include('nav.ejs') %>
     <h1 class="text-center">
-        마이페이지 입니다.
+        <%= 사용자.id %>의 마이페이지 입니다.
     </h1>
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>

@@ -2,6 +2,7 @@ const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
 
+require('dotenv').config()
 
 app.use(bodyParser.urlencoded({extended: true}));
 
@@ -14,23 +15,26 @@ app.use(methodOverride('_method'));
 app.set('view engine', 'ejs');
 app.use('/public', express.static('public'));
 
-MongoClient.connect('mongodb+srv://admin:1234@cluster0.hquqk.mongodb.net/myFirstDatabase?retryWrites=true&w=majority', {
-    useUnifiedTopology: true
-}, function (에러, client) {
-    //연결되면 할일
-    if (에러) return console.log(에러)
-    db = client.db('toDoApp');
-    // db.collection('post').insertOne({
-    //     이름: 'John',
-    //     _id: 200
-    // }, function (에러, 결과) {
-    //     console.log('저장완료');
-    // });
+// MongoClient.connect('mongodb+srv://admin:1234@cluster0.hquqk.mongodb.net/myFirstDatabase?retryWrites=true&w=majority', {
+//     useUnifiedTopology: true
+// }, function (에러, client) {
+//     //연결되면 할일
+//     if (에러) return console.log(에러)
+//     db = client.db('toDoApp');
+//     app.listen(8080, function () {
+//         console.log('listening on 8080')
+//     });
+// })
 
-    app.listen(8080, function () {
-        console.log('listening on 8080')
-    });
-})
+var db;
+  MongoClient.connect(process.env.DB_URL, function(err, client){
+  if (err) return console.log(err)
+  db = client.db('toDoApp');
+  app.listen(process.env.PORT, function() {
+    console.log('listening on 8080')
+  })
+}) 
+
 app.get('/', function (요청, 응답) {
     응답.sendFile(__dirname + '/index.html')
 })
@@ -74,9 +78,7 @@ app.post('/add', function (요청, 응답) {
 app.get('/list', function (요청, 응답) {
     db.collection('post').find().toArray(function (에러, 결과) {
         console.log(결과);
-        응답.render('list.ejs', {
-            posts: 결과
-        });
+        응답.render('list.ejs', { posts: 결과 });
     })
 })
 
@@ -178,20 +180,37 @@ passport.serializeUser(function (user, done) {
 });
 
 passport.deserializeUser(function (아이디, done) {
-  done(null, {})
+  db.collection('login').findOne({ id: 아이디 }, function (에러, 결과) {
+    done(null, 결과)
+  })
 }); 
 
 
 
 app.get('/mypage', 로그인했니, function (요청, 응답) {
   console.log(요청.user);
-  응답.render('mypage.ejs', {})
-})
+  응답.render('mypage.ejs', { 사용자 : 요청.user })
+}) 
 
 function 로그인했니(요청, 응답, next) {
   if (요청.user) {
     next()
   } else {
-    응답.send('로그인안하셨는데요?')
+    응답.send('로그인 안하셨는데요?')
   }
 }
+
+passport.deserializeUser(function (아이디, done) {
+  db.collection('login').findOne({ id: 아이디 }, function (에러, 결과) {
+    done(null, 결과)
+  })
+}); 
+
+
+
+app.get('/search', (요청, 응답)=>{
+  console.log(요청.query.value);
+  db.collection('post').find({제목 : 요청.query.value}).toArray((에러, 결과)=>{
+    console.log(결과)
+  })
+})
