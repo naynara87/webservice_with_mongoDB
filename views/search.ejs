@@ -20,6 +20,27 @@
         <div class="container">
             <div class="my-3 p-3 bg-white rounded shadow-sm">
                 <h5 class="border-bottom border-gray pb-2 mb-0 text-danger">검색결과입니다.</h5>
+                <% for (var i=0; i < posts.length; i ++) { %>
+                    <div class="media text-muted pt-3">
+                        <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+                            <span class="mr-1">
+                                글번호: <%= posts[i]._id %>
+                            </span>
+                            <span class="d-flex justify-content-between text-gray-dark">
+                                <a style="font-size: 20px;" href="/detail/<%= posts[i]._id %>">
+                                    <%= posts[i].제목 %>
+                                </a>
+                                <span>
+                                    <%= posts[i].날짜 %>
+                                </span>
+                            </span>
+
+                            <button class="float-right btn btn-danger btn-sm mt-2 ml-1" data-dismiss="true" data-id="<%= posts[i]._id %>">삭제</button>
+                            <a href="/edit/<%= posts[i]._id %>"
+                                class="float-right btn btn-outline-danger btn-sm mt-2">수정</a>
+                        </p>
+                    </div>
+                <% } %>
             </div>
         </div>
 

@@ -15,17 +15,6 @@ app.use(methodOverride('_method'));
 app.set('view engine', 'ejs');
 app.use('/public', express.static('public'));
 
-// MongoClient.connect('mongodb+srv://admin:1234@cluster0.hquqk.mongodb.net/myFirstDatabase?retryWrites=true&w=majority', {
-//     useUnifiedTopology: true
-// }, function (에러, client) {
-//     //연결되면 할일
-//     if (에러) return console.log(에러)
-//     db = client.db('toDoApp');
-//     app.listen(8080, function () {
-//         console.log('listening on 8080')
-//     });
-// })
-
 var db;
   MongoClient.connect(process.env.DB_URL, function(err, client){
   if (err) return console.log(err)
@@ -42,6 +31,7 @@ app.get('/', function (요청, 응답) {
 app.get('/write', function (요청, 응답) {
     응답.sendFile(__dirname + '/write.html')
 })
+
 app.post('/add', function (요청, 응답) {
     db.collection('counter').findOne({
         name: '게시물갯수'
@@ -91,7 +81,6 @@ app.delete('/delete', function (요청, 응답) {
             message: '성공했습니다.'
         });
     })
-    응답.send('삭제완료');
 });
 
 //detail 로 접속하면 detail.ejs 보여줌
@@ -107,29 +96,9 @@ app.get('/detail/:id', function (요청, 응답) {
 
 //detail 로 접속하면 detail.ejs 보여줌
 app.get('/edit/:id', function (요청, 응답) {
-    db.collection('post').findOne({
-        _id: parseInt(요청.params.id)
-    }, function (에러, 결과) {
-        응답.render('edit.ejs', {
-            post: 결과
-        })
+    db.collection('post').findOne({_id: parseInt(요청.params.id)}, function (에러, 결과) {
+        응답.render('edit.ejs', { post: 결과 })
     })
-
-});
-
-app.put('/edit', function (요청, 결과) {
-    db.collection('post').updateOne({
-        _id: parseInt(요청.body.id)
-    }, {
-        $set: {
-            제목: 요청.body.title,
-            날짜: 요청.body.date,
-            내용: 요청.body.detail
-        }
-    }, function () {
-        console.log('수정완료');
-        응답.redirect('/list');
-    });
 });
 
 
@@ -209,8 +178,27 @@ passport.deserializeUser(function (아이디, done) {
 
 
 app.get('/search', (요청, 응답)=>{
-  console.log(요청.query.value);
-  db.collection('post').find({제목 : 요청.query.value}).toArray((에러, 결과)=>{
+  console.log(요청.query);
+  var 검색조건 = [
+    {
+      $search: {
+        index: 'titleSearch',
+        text: {
+          query: 요청.query.value,
+          path: ['제목', '날짜']
+        }
+      }
+    }
+  ] 
+  db.collection('post').aggregate(검색조건).toArray((에러, 결과)=>{
     console.log(결과)
+    응답.render('search.ejs', {posts : 결과})
   })
 })
+
+app.put('/edit', function(요청, 응답){
+  db.collection('post').updateOne( {_id : parseInt(요청.body.id) }, {$set : { 제목 : 요청.body.title , 날짜 : 요청.body.date }}, function(){
+    console.log('수정완료');
+    응답.redirect('/list');
+  });
+});
