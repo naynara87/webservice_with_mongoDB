@@ -12,3 +12,7 @@
 7. URL query string
 8. search / indexing
 9. 회원가입
+10. 라우터 설정
+11. 이미지 업로드
+    * npm install multer
+    
