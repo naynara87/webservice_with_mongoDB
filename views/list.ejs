@@ -18,12 +18,10 @@
 
         <!-- 리스트 목록 -->
         <div class="container">
-            <form>
-                <div class="input-group mb-2">
-                    <input class="form-control" id="search-input" placeholder="검색어를 입력하세요.">
-                    <button class="input-group-append btn btn-danger" id="search">검색</button>
-                </div>
-            </form>
+            <div class="input-group mb-2">
+                <input class="form-control" id="search-input" placeholder="검색어를 입력하세요.">
+                <button class="input-group-append btn btn-danger" id="search">검색</button>
+            </div>
             <div class="my-3 p-3 bg-white rounded shadow-sm">
                 <h5 class="border-bottom border-gray pb-2 mb-0 text-danger">할일 목록</h5>
                     <% for (var i=0; i < posts.length; i ++) { %>
@@ -68,7 +66,7 @@
                 }).done(function (결과) {
                     //AJAX 성공시 실행할 코드는 여기
                     console.log('삭제되었습니다.');
-                    this_button.parent('p').fadeOut();
+                    this_button.parents('.media').fadeOut();
                 }).fail(function (xhr, textStatus, errorThrown) {
                     //요청 실패시 실행할 코드
                     console.log(xhr, textStatus, errorThrown);

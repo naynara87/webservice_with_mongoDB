@@ -11,3 +11,4 @@
 6. .env 정리
 7. URL query string
 8. search / indexing
+9. 회원가입

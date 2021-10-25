@@ -33,27 +33,15 @@ app.get('/write', function (요청, 응답) {
 })
 
 app.post('/add', function (요청, 응답) {
-    db.collection('counter').findOne({
-        name: '게시물갯수'
-    }, function (에러, 결과) {
-        var 총게시물갯수 = 결과.totalPost
-
-        db.collection('post').insertOne({
-            _id: 총게시물갯수 + 1,
-            제목: 요청.body.title,
-            날짜: 요청.body.date,
-            내용: 요청.body.detail
-        }, function (에러, 결과) {
-            db.collection('counter').updateOne({
-                name: '게시물갯수'
-            }, {
-                $inc: {
-                    totalPost: 1
-                }
-            }, function (에러, 결과) {
-                if (에러) {
-                    return console.log(에러)
-                }
+    
+    응답.send('전송완료');
+    db.collection('counter').findOne({ name: '게시물갯수' }, function (에러, 결과) {
+        var 총게시물갯수 = 결과.totalPost;
+        var 저장할거 = { _id: 총게시물갯수 + 1, 작성자: 요청.user._id, 제목: 요청.body.title, 날짜: 요청.body.date, 내용: 요청.body.detail }
+        db.collection('post').insertOne(저장할거, function (에러, 결과) {
+            console.log('저장완료');
+            db.collection('counter').updateOne({ name: '게시물갯수'}, { $inc: {totalPost: 1}}, function (에러, 결과) {
+                if (에러) { return console.log(에러) }
                 // 응답.send('전송완료');
                 응답.redirect('/list');
             })
@@ -75,8 +63,9 @@ app.get('/list', function (요청, 응답) {
 //해당 버튼 클릭시 해당 아이디 삭제-
 app.delete('/delete', function (요청, 응답) {
     요청.body._id = parseInt(요청.body._id)
-    db.collection('post').deleteOne(요청.body, function (에러, 결과) {
+    db.collection('post').deleteOne({_id : 요청.body._id, 작성자: 요청.user._id}, function (에러, 결과) {
         console.log('삭제완료');
+        console.log('에러',에러);
         응답.status(200).send({
             message: '성공했습니다.'
         });
@@ -169,6 +158,7 @@ function 로그인했니(요청, 응답, next) {
   }
 }
 
+
 passport.deserializeUser(function (아이디, done) {
   db.collection('login').findOne({ id: 아이디 }, function (에러, 결과) {
     done(null, 결과)
@@ -176,29 +166,44 @@ passport.deserializeUser(function (아이디, done) {
 }); 
 
 
-
-app.get('/search', (요청, 응답)=>{
-  console.log(요청.query);
-  var 검색조건 = [
-    {
-      $search: {
-        index: 'titleSearch',
-        text: {
-          query: 요청.query.value,
-          path: ['제목', '날짜']
-        }
-      }
-    }
-  ] 
-  db.collection('post').aggregate(검색조건).toArray((에러, 결과)=>{
-    console.log(결과)
-    응답.render('search.ejs', {posts : 결과})
-  })
-})
-
 app.put('/edit', function(요청, 응답){
   db.collection('post').updateOne( {_id : parseInt(요청.body.id) }, {$set : { 제목 : 요청.body.title , 날짜 : 요청.body.date }}, function(){
     console.log('수정완료');
     응답.redirect('/list');
   });
 });
+
+
+
+app.get('/search', (요청, 응답)=>{
+  var 검색조건 = [
+    {
+      $search: {
+        index: 'titleSearch',
+        text: {
+          query: 요청.query.value,
+          path: '제목'  // 제목날짜 둘다 찾고 싶으면 ['제목', '날짜']
+        }
+      }
+    },
+    {$project: {제목:1, _id:0, score: { $meta:"searchScore" } } }
+  ] 
+  console.log(요청.query);
+  db.collection('post').aggregate(검색조건).toArray((에러, 결과)=>{
+    console.log(결과)
+    응답.render('search.ejs', {posts : 결과})
+  })
+})
+
+
+
+app.post('/register', function (요청, 응답) {
+  db.collection('login').insertOne({ id: 요청.body.id, pw: 요청.body.pw }, function (에러, 결과) {
+    응답.redirect('/')
+  })
+})
+
+
+
+app.use('/', require('./routes/shop.js') );
+app.use('/', require('./routes/board.js') );
