@@ -4,6 +4,10 @@ const bodyParser = require('body-parser')
 
 require('dotenv').config()
 
+const http = require('http').createServer(app);
+const { Server } = require("socket.io");
+const io = new Server(http);
+
 app.use(bodyParser.urlencoded({extended: true}));
 
 const MongoClient = require('mongodb').MongoClient;
@@ -19,7 +23,7 @@ var db;
   MongoClient.connect(process.env.DB_URL, function(err, client){
   if (err) return console.log(err)
   db = client.db('toDoApp');
-  app.listen(process.env.PORT, function() {
+  http.listen(process.env.PORT, function() {
     console.log('listening on 8080')
   })
 }) 
@@ -200,6 +204,7 @@ app.get('/image/:imageName', function (요청, 응답){
 
 
 
+
 app.post('/add', function (요청, 응답) {
   console.log(요청.user._id);
   응답.send('전송완료');
@@ -210,9 +215,8 @@ app.post('/add', function (요청, 응답) {
           console.log('저장완료');
           db.collection('counter').updateOne({ name: '게시물갯수'}, { $inc: {totalPost: 1}}, function (에러, 결과) {
               if (에러) { return console.log(에러) }
-               // 응답.send('전송완료');
-              응답.redirect('/list');
           })
+          // 응답.redirect('/list');
       })
   })
 })
@@ -257,4 +261,87 @@ app.get('/edit/:id', function (요청, 응답) {
   db.collection('post').findOne({_id: parseInt(요청.params.id)}, function (에러, 결과) {
       응답.render('edit.ejs', { post: 결과 })
   })
+});
+
+
+
+
+
+const {ObjectId} = require('mongodb');
+
+app.post('/chatroom', 로그인했니, function(요청, 응답){
+
+  var 저장할거 = {
+    title : '무슨무슨채팅방',
+    member : [ObjectId(요청.body.당한사람id), 요청.user._id],
+    date : new Date()
+  }
+
+  db.collection('chatroom').insertOne(저장할거).then(function(결과){
+    응답.send('저장완료')
+  });
+});
+
+
+app.get('/chat', 로그인했니, function(요청, 응답){ 
+
+  db.collection('chatroom').find({ member : 요청.user._id }).toArray().then((결과)=>{
+    console.log(결과);
+    응답.render('chat.ejs', {data : 결과})
+  })
+
+}); 
+
+
+app.post('/message', 로그인했니, function(요청, 응답){
+  var 저장할거 = {
+    parent : 요청.body.parent,
+    userid : 요청.user._id,
+    content : 요청.body.content,
+    date : new Date(),
+  }
+  db.collection('message').insertOne(저장할거).then(()=>{
+    응답.send('DB저장성공');
+    console.log('DB저장성공')
+  })
+});
+
+
+app.get('/message/:id', 로그인했니, function(요청, 응답){
+
+  응답.writeHead(200, {
+    "Connection": "keep-alive",
+    "Content-Type": "text/event-stream",
+    "Cache-Control": "no-cache",
+  });
+  db.collection('message').find({ parent: 요청.params.id }).toArray()
+  .then((결과)=>{
+    응답.write('event: test\n');
+    응답.write('data:' + JSON.stringify(결과) + '\n\n');
+  })
+
+  const pipeline = [
+    { $match: { 'fullDocument.parent' : 요청.params.id } }
+  ];
+
+  const collection = db.collection('message');
+  const changeStream = collection.watch(pipeline);
+  changeStream.on('change', (result)=>{
+    응답.write('event: test\n');
+    응답.write('data: ' + JSON.stringify([result.fullDocument]) + '\n\n');
+  });
+  
+});
+
+
+app.get('/socket', function(요청,응답){
+  응답.render('socket.ejs')
+});
+
+io.on('connection', function(socket){
+  console.log('연결되었어요');
+
+  socket.on('user-send', function(data){
+    console.log(data)
+  });
 });

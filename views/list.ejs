@@ -18,42 +18,38 @@
 
         <!-- 리스트 목록 -->
         <div class="container">
+            <h5 class="pb-2 mb-0 text-danger mt-5">할일 목록</h5>
             <div class="input-group mb-2">
                 <input class="form-control" id="search-input" placeholder="검색어를 입력하세요.">
                 <button class="input-group-append btn btn-danger" id="search">검색</button>
             </div>
-            <div class="my-3 p-3 bg-white rounded shadow-sm">
-                <h5 class="border-bottom border-gray pb-2 mb-0 text-danger">할일 목록</h5>
-                    <% for (var i=0; i < posts.length; i ++) { %>
-                    <div class="media text-muted pt-3">
-                        <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
-                            <span class="mr-1">
-                                글번호: <%= posts[i]._id %>
-                            </span>
-                            <span class="d-flex justify-content-between text-gray-dark">
-                                <a style="font-size: 20px;" href="/detail/<%= posts[i]._id %>">
-                                    <%= posts[i].제목 %>
-                                </a>
-                                <span>
-                                    <%= posts[i].날짜 %>
-                                </span>
-                            </span>
-
-                            <button class="float-right btn btn-danger btn-sm mt-2 ml-1" data-dismiss="true" data-id="<%= posts[i]._id %>">삭제</button>
-                            <a href="/edit/<%= posts[i]._id %>"
-                                class="float-right btn btn-outline-danger btn-sm mt-2">수정</a>
-                        </p>
-                    </div>
-                    <% } %>
-                        <small class="d-block text-right mt-3">
-                            <a href="/write">할일 작성하기</a>
+            <ul class="list-group">
+                <% for (var i=0; i < posts.length; i ++) { %>
+                <li class="list-group-item">
+                    <span class="mr-1"> 글번호: <%= posts[i]._id %></span>
+                    <span class="d-flex justify-content-between text-gray-dark">
+                        <a style="font-size: 20px;" href="/detail/<%= posts[i]._id %>">
+                            <%= posts[i].제목 %>
+                        </a>
+                        <small>
+                            <%= posts[i].날짜 %><br>
+                            <%= posts[i].작성자 %>
                         </small>
-            </div>
+                    </span>
+                    <div class="btn-group mt-2 float-right">
+                        <button class="btn btn-danger btn-sm" data-dismiss="true" data-id="<%= posts[i]._id %>">삭제</button>
+                        <a href="/edit/<%= posts[i]._id %>" class="btn btn-outline-danger btn-sm">수정</a>
+                        <button class="btn btn-success btn-sm chat" data-id="<%= posts[i].작성자 %>">채팅하기</button>
+                    </div>
+                </li>
+                <% } %>
+            </ul>    
         </div>
 
         <!-- jQuery first, then Popper.js, then Bootstrap JS -->
         <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+        
         <script>
             $('[data-dismiss="true"]').click(function (e) {
                 var 글번호 = e.target.dataset.id;
@@ -76,6 +72,14 @@
             $('#search').click(function(){
                 var 입력한값 = $('#search-input').val();
                 window.location.replace('/search?value=' + 입력한값)
+            });
+
+
+            $('.chat').click(function(e){
+                var id = e.target.dataset.id;
+                $.post('/chatroom',{당한사람id: id}).then(()=>{
+                    console.log('성공');
+                })
             });
         </script>
 </body>

@@ -15,4 +15,5 @@
 10. 라우터 설정
 11. 이미지 업로드
     * npm install multer
-    
+12. 채팅
+    * npm i socket.io
