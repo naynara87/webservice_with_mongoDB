@@ -20,15 +20,31 @@
         <div class="container mt-4">
             <h4 class="text-center mb-3">업로드페이지</h4>
 
-            <form method="POST" action="/upload" enctype="multipart/form-data" >
-                <input type="file" name="프로필">
-                <button class="btn btn-primary" type="submit">전송</button>
+            <form method="POST" action="/upload" enctype="multipart/form-data">
+                <div class="input-group">
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" name="프로필" id="inputGroupFile04">
+                        <label class="custom-file-label" for="inputGroupFile04">파일선택</label>
+                    </div>
+                    
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" type="submit">전송</button>
+                    </div>
+                </div>
             </form>
+
         </div>
 
         <!-- jQuery first, then Popper.js, then Bootstrap JS -->
         <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+        
+        <script>
+            document.getElementById("inputGroupFile04").onchange = function () {
+                document.getElementsByClassName("custom-file-label").value = this.value.replace("C:\\fakepath\\", "");
+            };
+
+        </script>
 </body>
 
 </html>

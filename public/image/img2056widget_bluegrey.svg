@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 25.2.3, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 500 500" style="enable-background:new 0 0 500 500;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:#999999;}
+	.st1{fill:#B3B3B3;}
+	.st2{fill:#E6E6E6;}
+	.st3{fill:none;stroke:#B3B3B3;stroke-width:10;stroke-miterlimit:10;}
+	.st4{fill:#F2F2F2;}
+	.st5{fill:#FFFFFF;stroke:#9DA7B3;stroke-width:10;stroke-miterlimit:10;}
+	.st6{fill:#F2F2F2;stroke:#B3B3B3;stroke-width:5;stroke-miterlimit:10;}
+	.st7{fill:none;stroke:#B3B3B3;stroke-width:5;stroke-miterlimit:10;}
+	.st8{fill:#CCCCCC;}
+	.st9{fill:#F3FAFE;}
+	.st10{fill:none;stroke:#9DA7B3;stroke-width:10;stroke-miterlimit:10;}
+	.st11{fill:none;stroke:#9DA7B3;stroke-width:10;stroke-miterlimit:10;stroke-dasharray:20,20;}
+	.st12{fill:#FFFFFF;stroke:#5599F7;stroke-width:10;stroke-miterlimit:10;}
+	.st13{fill:#FFFFFF;}
+	.st14{fill:none;stroke:#B3B3B3;stroke-width:10;stroke-miterlimit:10;stroke-dasharray:20,20;}
+	.st15{fill:none;stroke:#5599F7;stroke-width:10;stroke-miterlimit:10;}
+	.st16{fill:#FFFFFF;stroke:#B3B3B3;stroke-width:10;stroke-miterlimit:10;}
+	.st17{fill:#5599F7;}
+</style>
+<rect x="35" y="35" class="st5" width="200" height="200"/>
+<rect x="265" y="35" class="st5" width="200" height="200"/>
+<rect x="35" y="265" class="st5" width="200" height="200"/>
+<g>
+	<g>
+		<rect x="265" y="265" class="st9" width="200" height="200"/>
+		<g>
+			<polyline class="st10" points="465,455 465,465 455,465 			"/>
+			<line class="st11" x1="435" y1="465" x2="285" y2="465"/>
+			<polyline class="st10" points="275,465 265,465 265,455 			"/>
+			<line class="st11" x1="265" y1="435" x2="265" y2="285"/>
+			<polyline class="st10" points="265,275 265,265 275,265 			"/>
+			<line class="st11" x1="295" y1="265" x2="445" y2="265"/>
+			<polyline class="st10" points="455,265 465,265 465,275 			"/>
+			<line class="st11" x1="465" y1="295" x2="465" y2="445"/>
+		</g>
+	</g>
+	<g>
+		<line class="st10" x1="365" y1="415" x2="365" y2="315"/>
+		<line class="st10" x1="415" y1="365" x2="315" y2="365"/>
+	</g>
+</g>
+</svg>
